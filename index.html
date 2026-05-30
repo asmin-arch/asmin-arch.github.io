@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asmin Budathoki — Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: #222222;
+    --accent: #c8f542;
+    --accent2: #f5a623;
+    --text: #f0f0f0;
+    --muted: #666666;
+    --card: #131313;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.025;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 3rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(12px);
+  }
+
+  .nav-logo {
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--accent);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 7rem 3rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg-circle {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(200, 245, 66, 0.07) 0%, transparent 70%);
+    right: -100px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .hero-tag::before {
+    content: '';
+    display: inline-block;
+    width: 2rem;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .hero h1 {
+    font-size: clamp(3rem, 5vw, 5.5rem);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 span {
+    color: var(--accent);
+  }
+
+  .hero-desc {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 440px;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    padding: 0.8rem 2rem;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(200,245,66,0.25);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    padding: 0.8rem 2rem;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: border-color 0.2s, color 0.2s;
+    display: inline-block;
+  }
+
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* HERO RIGHT - stats */
+  .hero-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1.5rem;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    text-align: right;
+    min-width: 220px;
+    position: relative;
+    animation: floatIn 0.6s ease both;
+  }
+
+  .stat-card:nth-child(1) { animation-delay: 0.1s; }
+  .stat-card:nth-child(2) { animation-delay: 0.25s; }
+  .stat-card:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes floatIn {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--accent);
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 0.25rem;
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 6rem 3rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+
+  /* SKILLS */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 3rem;
+  }
+
+  .skill-group {
+    background: var(--card);
+    padding: 2rem;
+    transition: background 0.2s;
+  }
+
+  .skill-group:hover { background: var(--surface2); }
+
+  .skill-group-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .skill-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    padding: 0.25rem 0.6rem;
+    border: 1px solid var(--border);
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .skill-tag:hover { color: var(--text); border-color: var(--muted); }
+
+  /* PROJECTS */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .project-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    cursor: default;
+  }
+
+  .project-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+  }
+
+  .project-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s ease;
+  }
+
+  .project-card:hover::after { transform: scaleX(1); }
+
+  .project-number {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 1.25rem;
+  }
+
+  .project-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
+  }
+
+  .project-desc {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .project-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .stack-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    padding: 0.2rem 0.55rem;
+    background: var(--surface2);
+    color: var(--accent);
+    border: 1px solid rgba(200,245,66,0.2);
+  }
+
+  /* EDUCATION */
+  .edu-list {
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .edu-item {
+    background: var(--card);
+    padding: 2rem 2.5rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 2rem;
+    transition: background 0.2s;
+  }
+
+  .edu-item:hover { background: var(--surface2); }
+
+  .edu-degree {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.3rem;
+  }
+
+  .edu-school {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  .edu-meta {
+    text-align: right;
+  }
+
+  .edu-year {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+
+  .edu-grade {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-top: 0.2rem;
+  }
+
+  /* CONTACT */
+  #contact {
+    background: var(--card);
+  }
+
+  .contact-inner {
+    max-width: 640px;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 2.5rem;
+  }
+
+  .contact-link {
+    background: var(--bg);
+    padding: 1.25rem 1.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none;
+    color: var(--text);
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .contact-link:hover { background: var(--surface2); color: var(--accent); }
+
+  .contact-link-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .contact-link-value {
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+
+  .contact-link-arrow {
+    font-size: 1.1rem;
+    color: var(--muted);
+    transition: color 0.2s, transform 0.2s;
+  }
+
+  .contact-link:hover .contact-link-arrow {
+    color: var(--accent);
+    transform: translateX(4px);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 2rem 3rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  footer span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-left > * {
+    animation: fadeUp 0.7s ease both;
+  }
+
+  .hero-left > *:nth-child(1) { animation-delay: 0.05s; }
+  .hero-left > *:nth-child(2) { animation-delay: 0.15s; }
+  .hero-left > *:nth-child(3) { animation-delay: 0.25s; }
+  .hero-left > *:nth-child(4) { animation-delay: 0.35s; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1.25rem; }
+    .nav-links a { font-size: 0.72rem; }
+
+    .hero {
+      grid-template-columns: 1fr;
+      padding: 7rem 1.5rem 4rem;
+      gap: 3rem;
+    }
+
+    .hero-right { align-items: flex-start; }
+    .stat-card { min-width: unset; width: 100%; }
+
+    section { padding: 4rem 1.5rem; }
+
+    .projects-grid { grid-template-columns: 1fr; }
+
+    .edu-item { grid-template-columns: 1fr; gap: 0.5rem; }
+    .edu-meta { text-align: left; }
+
+    footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">AB.</div>
+  <ul class="nav-links">
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg-circle"></div>
+  <div class="hero-left">
+    <div class="hero-tag">Based in Kathmandu, Nepal</div>
+    <h1>Asmin<br><span>Budathoki</span></h1>
+    <p class="hero-desc">Python & Django developer with .NET expertise — building robust backends, intelligent chatbots, and clean APIs from the heart of Nepal.</p>
+    <div class="hero-ctas">
+      <a href="#projects" class="btn-primary">View Projects</a>
+      <a href="#contact" class="btn-outline">Get in Touch</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="stat-card">
+      <div class="stat-number">5+</div>
+      <div class="stat-label">Projects shipped</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">2</div>
+      <div class="stat-label">Frameworks mastered</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">∞</div>
+      <div class="stat-label">Problems solved</div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label">02 — Expertise</div>
+  <h2 class="section-title">Technical<br>Skills</h2>
+  <div class="skills-grid">
+    <div class="skill-group">
+      <div class="skill-group-title">Languages & Frameworks</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">Django</span>
+        <span class="skill-tag">Django REST Framework</span>
+        <span class="skill-tag">C#</span>
+        <span class="skill-tag">.NET Core</span>
+        <span class="skill-tag">Razor Pages</span>
+        <span class="skill-tag">Kivy</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Web & Architecture</div>
+      <div class="skill-tags">
+        <span class="skill-tag">HTML</span>
+        <span class="skill-tag">CSS</span>
+        <span class="skill-tag">Bootstrap</span>
+        <span class="skill-tag">OAuth</span>
+        <span class="skill-tag">JWT Auth</span>
+        <span class="skill-tag">MVC/MVT</span>
+        <span class="skill-tag">RESTful APIs</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Databases</div>
+      <div class="skill-tags">
+        <span class="skill-tag">MySQL</span>
+        <span class="skill-tag">SQL Server</span>
+        <span class="skill-tag">Query Optimization</span>
+        <span class="skill-tag">Entity Framework</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Data & Automation</div>
+      <div class="skill-tags">
+        <span class="skill-tag">NumPy</span>
+        <span class="skill-tag">Pandas</span>
+        <span class="skill-tag">Scrapy</span>
+        <span class="skill-tag">BeautifulSoup</span>
+        <span class="skill-tag">Selenium</span>
+        <span class="skill-tag">OpenAI API</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">DevOps & Deployment</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Git</span>
+        <span class="skill-tag">Docker</span>
+        <span class="skill-tag">Docker Compose</span>
+        <span class="skill-tag">Heroku</span>
+        <span class="skill-tag">CI/CD</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Tools & Security</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Postman</span>
+        <span class="skill-tag">Swagger</span>
+        <span class="skill-tag">Jupyter</span>
+        <span class="skill-tag">Google Colab</span>
+        <span class="skill-tag">SMTP</span>
+        <span class="skill-tag">OTP / Google Cloud</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">03 — Work</div>
+  <h2 class="section-title">Selected<br>Projects</h2>
+  <div class="projects-grid">
+
+    <div class="project-card">
+      <div class="project-number">// 01</div>
+      <div class="project-title">Custom Chatbot with OpenAI API</div>
+      <p class="project-desc">Domain-specific chatbot integrated into a Django web app using GPT. Conversation history secured with JWT and OAuth. Gmail OTP verification via SMTP and Google Cloud Console.</p>
+      <div class="project-stack">
+        <span class="stack-badge">Django</span>
+        <span class="stack-badge">OpenAI GPT</span>
+        <span class="stack-badge">JWT</span>
+        <span class="stack-badge">OAuth</span>
+        <span class="stack-badge">SMTP</span>
+        <span class="stack-badge">Google Cloud</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-number">// 02</div>
+      <div class="project-title">Website Scraper & Dashboard</div>
+      <p class="project-desc">Scrapy-based scraper to collect and store e-commerce pricing data. Visualized insights via Django's admin dashboard. Multi-tool approach using BeautifulSoup, Requests, and Selenium.</p>
+      <div class="project-stack">
+        <span class="stack-badge">Scrapy</span>
+        <span class="stack-badge">BeautifulSoup</span>
+        <span class="stack-badge">Selenium</span>
+        <span class="stack-badge">Django</span>
+        <span class="stack-badge">MySQL</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-number">// 03</div>
+      <div class="project-title">Kivy Data Entry App</div>
+      <p class="project-desc">Cross-platform desktop/mobile app for logging field data and syncing to MySQL. CSV export and summary statistics powered by Pandas. Secure database access with .env configuration.</p>
+      <div class="project-stack">
+        <span class="stack-badge">Kivy</span>
+        <span class="stack-badge">Python</span>
+        <span class="stack-badge">Pandas</span>
+        <span class="stack-badge">MySQL</span>
+        <span class="stack-badge">CSV Export</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-number">// 04</div>
+      <div class="project-title">Dockerized Django Backend</div>
+      <p class="project-desc">Full Django backend deployed with Docker Compose in a multi-container setup (web, database, worker). Secure environment variable management with .env configuration throughout.</p>
+      <div class="project-stack">
+        <span class="stack-badge">Docker</span>
+        <span class="stack-badge">Docker Compose</span>
+        <span class="stack-badge">Django</span>
+        <span class="stack-badge">PostgreSQL</span>
+        <span class="stack-badge">CI/CD</span>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <div class="project-number">// 05</div>
+      <div class="project-title">.NET Razor Pages Web App</div>
+      <p class="project-desc">Full-featured Razor Pages application using ASP.NET Core with MVC architecture. Entity Framework Core and Identity integration for auth and role management. Custom APIs documented with Swagger.</p>
+      <div class="project-stack">
+        <span class="stack-badge">ASP.NET Core</span>
+        <span class="stack-badge">Razor Pages</span>
+        <span class="stack-badge">Entity Framework</span>
+        <span class="stack-badge">Swagger</span>
+        <span class="stack-badge">SQL Server</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-label">04 — Background</div>
+  <h2 class="section-title">Education</h2>
+  <div class="edu-list">
+    <div class="edu-item">
+      <div>
+        <div class="edu-degree">+2 Higher Secondary Education</div>
+        <div class="edu-school">Little Angels College</div>
+      </div>
+      <div class="edu-meta">
+        <div class="edu-year">2018</div>
+        <div class="edu-grade">Second Division — GPA 2.40</div>
+      </div>
+    </div>
+    <div class="edu-item">
+      <div>
+        <div class="edu-degree">Secondary Education Examination (SEE)</div>
+        <div class="edu-school">K.U.H.S</div>
+      </div>
+      <div class="edu-meta">
+        <div class="edu-year">2016</div>
+        <div class="edu-grade">First Division — GPA 3.2</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="section-label">05 — Connect</div>
+    <h2 class="section-title">Get in<br>Touch</h2>
+    <p style="font-family:'DM Mono',monospace;font-size:0.85rem;color:var(--muted);margin-top:1rem;line-height:1.8;">Open to freelance projects, collaborations, and full-time opportunities. Based in Kathmandu — available remotely.</p>
+    <div class="contact-links">
+      <a href="mailto:asminmj13@gmail.com" class="contact-link">
+        <div>
+          <div class="contact-link-label">Email</div>
+          <div class="contact-link-value">asminmj13@gmail.com</div>
+        </div>
+        <span class="contact-link-arrow">→</span>
+      </a>
+      <a href="tel:+9779843945177" class="contact-link">
+        <div>
+          <div class="contact-link-label">Phone</div>
+          <div class="contact-link-value">+977 9843945177</div>
+        </div>
+        <span class="contact-link-arrow">→</span>
+      </a>
+      <div class="contact-link" style="cursor:default;">
+        <div>
+          <div class="contact-link-label">Location</div>
+          <div class="contact-link-value">Kathmandu, Nepal</div>
+        </div>
+        <span class="contact-link-arrow" style="opacity:0.3;">📍</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2026 Asmin Budathoki</span>
+  <span>Python · Django · .NET · Docker</span>
+</footer>
+
+<script>
+  // Smooth active nav highlighting
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => {
+          link.style.color = link.getAttribute('href') === '#' + entry.target.id
+            ? 'var(--accent)' : '';
+        });
+      }
+    });
+  }, { threshold: 0.4 });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
